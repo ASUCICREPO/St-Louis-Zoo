@@ -1,0 +1,18 @@
+
+@font-face {
+  font-family: 'Metapro Normal';
+  src: url('./assets/fonts/metapro_normal.otf') format('opentype');
+}
+
+@font-face {
+  font-family: 'Metapro Bold';
+  src: url('./assets/fonts/metapro_bold.otf') format('opentype');
+}
+
+body, button, input {
+  font-family: 'Metapro Normal', sans-serif;
+}
+
+strong, b {
+  font-family: 'Metapro Bold', sans-serif;
+}
