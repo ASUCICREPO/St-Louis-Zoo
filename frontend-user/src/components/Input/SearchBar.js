@@ -3,41 +3,41 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import searchIcon from '../../assets/icons/searchIcon.png';
 
-const SearchBar = () => {
+const SearchBar = ({handleSearch}) => {
   const [query, setQuery] = useState('');
   const navigate = useNavigate(); // Initialize useNavigate
 
-  const handleSearch = async () => {
-    // Create the payload for the API request
-    const payload = {
-      filters: {
-        keyword: query,
-      },
-    };
+  // const handleSearch = async () => {
+  //   // Create the payload for the API request
+  //   const payload = {
+  //     filters: {
+  //       keyword: query,
+  //     },
+  //   };
 
-    try {
-      // Fetch search results from the API
-      const response = await fetch('https://2g2799px6e.execute-api.us-east-1.amazonaws.com/default/GetSearchResults', { // Replace with your API endpoint
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      });
+  //   try {
+  //     // Fetch search results from the API
+  //     const response = await fetch('pits', { 
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify(payload),
+  //     });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+  //     if (!response.ok) {
+  //       throw new Error(`HTTP error! Status: ${response.status}`);
+  //     }
 
-      const result = await response.json();
-      console.log('Search result:', result);
+  //     const result = await response.json();
+  //     console.log('Search result:', result);
 
-      // Navigate to /results and pass the result as state
-      navigate('/results', { state: { searchResults: result.body } }); // Adjust to match your API response structure
-    } catch (error) {
-      console.error('Error during search:', error);
-    }
-  };
+  //     // Navigate to /results and pass the result as state
+  //     navigate('/results', { state: { searchResults: result.body } }); // Adjust to match your API response structure
+  //   } catch (error) {
+  //     console.error('Error during search:', error);
+  //   }
+  // };
 
   const searchLabelStyle = {
     marginBottom: '5px',

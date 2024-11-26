@@ -1,8 +1,9 @@
 // UserAgreement.js
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Checkbox from '../components/Input/Checkbox';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
+import { CartContext } from '../components/CartContext'
 
 const UserAgreement = () => {
   const [agree1, setAgree1] = useState(false);
@@ -18,22 +19,53 @@ const UserAgreement = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
 
   const navigate = useNavigate();
+  const { cartItems } = useContext(CartContext);
 
   const handleSubmit = () => {
     console.log('Form submitted');
-
+    const requestPayload = {
+      requestedVideos: cartItems.map((item) => ({
+        id: item.id,
+        contactemail: item.contactEmail,
+        duration: item.duration,
+        ageofindividuals: item.ageOfIndividuals,
+        covariatedata: item.covariateData,
+        videocontext: item.videoContext,
+        videolocation: item.videoLocation,
+        datacollectionstatus: item.dataCollectionStatus,
+        researchapproval: item.researchApproval,
+        scientificname: item.scientificName,
+        contactlastname: item.contactLastName,
+        animalvisibility: item.animalVisibility,
+        clippedvideopath: item.clippedVideoPath,
+        videoformat: item.videoFormat,
+        commonname: item.commonName,
+        groupsize: item.groupSize,
+        contactfirstname: item.contactFirstName,
+        sexofanimals: item.sexOfAnimals,
+        behavioraleffects: item.behavioralEffects,
+        animalids: item.animalIds,
+        briefvideodescription: item.briefVideoDescription,
+        thumbnailstartpath: item.thumbnailStartPath,
+        thumbnailendpath: item.thumbnailEndPath,
+        videodate: item.videoDate,
+        starttime: item.startTime,
+        endtime: item.endTime,
+        thumbnail_url: item.thumbnailUrl,
+        clipping_video_url: item.clippingVideoUrl,
+      })),
+      requestername: requesterName,
+      faculty: facilitatorAffiliation,
+      title: title,
+      email: email,
+      reason: whyVideos,
+      phone: phoneNumber,
+    };
     // Call the additional API
     fetch('https://o63peui5vb.execute-api.us-east-1.amazonaws.com/default/SendEmail', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        requesterName,
-        facilitatorAffiliation,
-        title,
-        email,
-        whyVideos,
-        phoneNumber,
-      }),
+      body: JSON.stringify(requestPayload),
     })
       .then((response) => response.json())
       .then((data) => {

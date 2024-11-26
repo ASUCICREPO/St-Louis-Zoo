@@ -84,7 +84,6 @@ const Popover = ({ isOpen, onClose, videoData }) => {
           onClick={onClose}
         />
         <div style={contentStyle}>
-          {/* Video Details and Preview */}
           <div style={textContainerStyle}>
             {/* Text Details on the Left */}
             <h2 style={{ fontWeight: 'bold' }}>{videoData.title}</h2>
@@ -92,7 +91,8 @@ const Popover = ({ isOpen, onClose, videoData }) => {
             <p>Date: {videoData.date}</p>
           </div>
 
-          {/* Video Preview on the Right */}
+          console.log('Video URL:', videoData.presigned_clippedvideopath);
+
           <div style={videoPreviewStyle}>
             <video style={videoStyle} controls>
               <source src={videoData.presigned_clippedvideopath} type="video/mp4" />
@@ -101,7 +101,6 @@ const Popover = ({ isOpen, onClose, videoData }) => {
           </div>
         </div>
 
-        {/* Bottom Section */}
         <div>
           <ToggleButton />
           {/* <a href="#" onClick={() => alert('View Tag details clicked!')}>View Tag details</a> */}

@@ -137,6 +137,14 @@ const SearchPage = () => {
   const [searchClicked, setSearchClicked] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [checkedState, setCheckedState] = useState({});
+
+  const handleCheckboxChange = (label) => {
+    setCheckedState((prevState) => ({
+      ...prevState,
+      [label]: !prevState[label],
+    }));
+  };
 
   const navigate = useNavigate();
 
@@ -172,13 +180,6 @@ const SearchPage = () => {
     }));
   };
   
-  const handleCheckboxChange = (event, name) => {
-    const { checked } = event.target;
-    setInputs(prevInputs => ({
-      ...prevInputs,
-      [name]: checked ? event.target.value : ''
-    }));
-  };
   
   const handleSearch = async () => {
     setLoading(true);
@@ -207,19 +208,21 @@ const SearchPage = () => {
   
       // Make API call with the filters
       const response = await fetch('https://2g2799px6e.execute-api.us-east-1.amazonaws.com/default/GetSearchResults', {
-        method: 'POST', // or 'GET', depending on your API
+        method: 'POST', 
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(filters)
       });
+
+      console.log('Data sent to API:', JSON.stringify(filters, null, 2));
   
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }
   
       const data = await response.json();
-      setSearchResults(data.results); // Adjust based on your API response structure
+      setSearchResults(data.results); 
       setShowResults(true);
     } catch (err) {
       setError(err.message);
@@ -246,7 +249,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {videoDurationOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -272,7 +276,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {zooOrAquariumOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -310,7 +315,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {groupSizeOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -324,7 +330,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {sexOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -338,7 +345,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {lifeStagesOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -352,7 +360,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {animalVisibilityOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -366,7 +375,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {areaOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -380,7 +390,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {videoCollectedDuringOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -394,7 +405,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {originalVideoFormatOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -408,7 +420,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {fileTypeOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -422,7 +435,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: ' 10px' }}>
                 {dataCollectionOngoingOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -436,7 +450,8 @@ const SearchPage = () => {
             <AccordionDetails>
               <div style={{ display: 'grid', gap: '10px' }}>
                 {videoPreviouslyScoredOptions.map(option => (
-                  <label key={option.value}><Checkbox label={option.label} /></label>
+                  <label key={option.value}><Checkbox label={option.label} checked={checkedState[option.label] || false}
+                  onChange={() => handleCheckboxChange(option.label)}/></label>
                 ))}
               </div>
             </AccordionDetails>
@@ -461,7 +476,7 @@ const SearchPage = () => {
         <div className="main-container">
           {!searchClicked && <img src={logo} alt="Logo" className="logo" />}
           <div className="search-bar-wrapper">
-            <SearchBar onSearch={handleSearch} />
+            <SearchBar handleSearch={handleSearch} />
           </div>
 
           
