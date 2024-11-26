@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ToggleButton from '../Buttons/ToggleButton';
 import Popover from './Popover';
 
-const VideoCard = ({ index, title, duration, date, videoUrl, thumbnailUrl }) => {
+const VideoCard = ({ video, index, title, duration, date, videoUrl, thumbnailUrl }) => {
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   // Function to handle opening the popover
@@ -13,6 +13,12 @@ const VideoCard = ({ index, title, duration, date, videoUrl, thumbnailUrl }) => 
   // Function to handle closing the popover
   const handlePopoverClose = () => {
     setIsPopoverOpen(false);
+  };
+
+  const formatDuration = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours > 0 ? `${hours}h ` : ''}${minutes}m`;
   };
 
   const videoContainerStyle = {
@@ -77,13 +83,13 @@ const VideoCard = ({ index, title, duration, date, videoUrl, thumbnailUrl }) => 
         {/* Metadata and Button */}
         <div style={metaDataContainerStyle}>
           <div>
-            <div style={metaDataStyle}>{duration}</div>
+            <div style={metaDataStyle}>{formatDuration(duration)}</div>
             <div style={metaDataStyle}>{date}</div>
           </div>
 
           {/* ToggleButton */}
           <div>
-            <ToggleButton />
+            <ToggleButton video={video}/>
           </div>
         </div>
       </div>

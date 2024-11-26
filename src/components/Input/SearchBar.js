@@ -8,37 +8,35 @@ const SearchBar = () => {
   const navigate = useNavigate(); // Initialize useNavigate
 
   const handleSearch = async () => {
-    // const payload = {
-    //   filters: {
-    //     keyword: query,
-    //   },
-    // };
+    // Create the payload for the API request
+    const payload = {
+      filters: {
+        keyword: query,
+      },
+    };
 
-    // try {
-    //   const response = await fetch('https://2g2799px6e.execute-api.us-east-1.amazonaws.com/default/GetSearchResults', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(payload),
-    //   });
+    try {
+      // Fetch search results from the API
+      const response = await fetch('https://2g2799px6e.execute-api.us-east-1.amazonaws.com/default/GetSearchResults', { // Replace with your API endpoint
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      });
 
-    //   const result = await response.json();
-    //   console.log('Search result:', result);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-    //   // Navigate to /results and pass the result as state
-    //   navigate('/results', { state: { result } });
-    // } catch (error) {
-    //   console.error('Error during search:', error);
-    // }
-    const dummyResults = [
-      { id: 1, title: "Lion in the Wild", description: "A short clip of a lion hunting in the wild.", duration: "5:15" },
-      { id: 2, title: "Dolphins Playing", description: "An amazing video of dolphins playing together.", duration: "8:22" },
-      { id: 3, title: "Elephant Family", description: "A heartwarming video of a family of elephants.", duration: "4:10" },
-    ];
+      const result = await response.json();
+      console.log('Search result:', result);
 
-    // Navigate to results page with dummy data
-    navigate('/results', { state: { searchResults: dummyResults } });
+      // Navigate to /results and pass the result as state
+      navigate('/results', { state: { searchResults: result.body } }); // Adjust to match your API response structure
+    } catch (error) {
+      console.error('Error during search:', error);
+    }
   };
 
   const searchLabelStyle = {

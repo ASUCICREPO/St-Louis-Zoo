@@ -1,13 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import AddShoppingCart from '@mui/icons-material/AddShoppingCart';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { CartContext } from '../CartContext';
 
-const ToggleButton = () => {
+
+const ToggleButton = ({ video }) => {
   const [isAdded, setIsAdded] = useState(false);
+  const { addVideoToCart , removeVideoFromCart} = useContext(CartContext);
+
 
   const handleButtonClick = () => {
-    setIsAdded((prev) => !prev);
+    setIsAdded((prev) => {
+      const newState = !prev;
+      console.log("Video being added to cart:", video);
+
+      if (newState) {
+        addVideoToCart(video); // Add video to cart when it's being added
+      } else {
+        removeVideoFromCart(video); // Remove video from cart when it's being removed
+      }
+
+      return newState;
+    });
   };
 
   return (
@@ -23,7 +38,6 @@ const ToggleButton = () => {
               display: 'flex',
               alignItems: 'center',
               borderRadius: '5px',
-              
             }}
             onClick={handleButtonClick}
           >
@@ -45,13 +59,13 @@ const ToggleButton = () => {
           style={{
             backgroundColor: '#FDBD57',
             width: '100px',
-            height:'40px',
+            height: '40px',
             border: 'none',
             padding: '8px 16px',
             display: 'flex',
             alignItems: 'center',
             cursor: 'pointer',
-             borderRadius: '5px'
+            borderRadius: '5px',
           }}
           onClick={handleButtonClick}
         >

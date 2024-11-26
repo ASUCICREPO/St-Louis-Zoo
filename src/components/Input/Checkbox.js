@@ -1,27 +1,22 @@
-import React, { useState } from 'react';
+import React from 'react';
 import uncheckedIcon from '../../assets/icons/CheckboxEmpty.png';
 import checkedIcon from '../../assets/icons/CheckboxTicked.png';
 
-const Checkbox = ({ label }) => {
-  const [checked, setChecked] = useState(false);
-
-  const handleCheckboxChange = () => {
-    setChecked(!checked);
-  };
-
+const Checkbox = ({ label, checked, onChange }) => {
   return (
     <div style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
-      {/* Hidden Checkbox Input */}
       <input
         type="checkbox"
         id={`custom-checkbox-${label}`} // Unique ID for each checkbox
         checked={checked}
-        onChange={handleCheckboxChange}
+        onChange={onChange}
         style={{ display: 'none' }}
       />
-      
-      {/* Custom Checkbox Icon */}
-      <label htmlFor={`custom-checkbox-${label}`} style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}>
+
+      <label
+        htmlFor={`custom-checkbox-${label}`}
+        style={{ display: 'flex', alignItems: 'center', cursor: 'pointer' }}
+      >
         <img
           src={checked ? checkedIcon : uncheckedIcon}
           alt="Checkbox"
@@ -31,7 +26,6 @@ const Checkbox = ({ label }) => {
             marginRight: '8px',
           }}
         />
-        {/* Text Label */}
         <span>{label}</span>
       </label>
     </div>

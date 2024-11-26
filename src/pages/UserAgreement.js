@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import Checkbox from '../components/Input/Checkbox';
 import Button from '@mui/material/Button';
-import { useNavigate } from 'react-router-dom'; 
+import { useNavigate } from 'react-router-dom';
 
 const UserAgreement = () => {
   const [agree1, setAgree1] = useState(false);
@@ -17,58 +17,30 @@ const UserAgreement = () => {
   const [whyVideos, setWhyVideos] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
 
-  const navigate = useNavigate(); // Initialize useNavigate for navigation
-
-  const handleAgree1Change = (event) => {
-    console.log("1");
-    setAgree1(event.target.checked);
-  };
-
-  const handleAgree2Change = (event) => {
-    console.log("2");
-
-    setAgree2(event.target.checked);
-  };
-
-  const handleAgree3Change = (event) => {
-    console.log("3");
-
-    setAgree3(event.target.checked);
-  };
-
-  const handleAgree4Change = (event) => {
-    console.log("4");
-
-    setAgree4(event.target.checked);
-  };
-
-  const handleRequesterNameChange = (event) => {
-    setRequesterName(event.target.value);
-  };
-
-  const handleFacilitatorAffiliationChange = (event) => {
-    setFacilitatorAffiliation(event.target.value);
-  };
-
-  const handleTitleChange = (event) => {
-    setTitle(event.target.value);
-  };
-
-  const handleEmailChange = (event) => {
-    setEmail(event.target.value);
-  };
-
-  const handleWhyVideosChange = (event) => {
-    setWhyVideos(event.target.value);
-  };
-
-  const handlePhoneNumberChange = (event) => {
-    setPhoneNumber(event.target.value);
-  };
+  const navigate = useNavigate();
 
   const handleSubmit = () => {
     console.log('Form submitted');
-    navigate('/confirmation');
+
+    // Call the additional API
+    fetch('https://o63peui5vb.execute-api.us-east-1.amazonaws.com/default/SendEmail', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        requesterName,
+        facilitatorAffiliation,
+        title,
+        email,
+        whyVideos,
+        phoneNumber,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('API response:', data);
+        navigate('/confirmation');
+      })
+      .catch((error) => console.error('API error:', error));
   };
 
   const handleBackToSearch = () => {
@@ -76,49 +48,72 @@ const UserAgreement = () => {
   };
 
   const isFormValid = () => {
+    // Validate checkboxes
+    const allChecked = agree1 && agree2 && agree3 && agree4;
+
+    // Validate input fields
+    const isRequesterNameValid = requesterName.trim() !== '';
+    const isFacilitatorAffiliationValid = facilitatorAffiliation.trim() !== '';
+    const isTitleValid = title.trim() !== '';
+    const isEmailValid = email.includes('@');
+    const isWhyVideosValid = whyVideos.trim() !== '';
+    const isPhoneNumberValid = /^\d{10}$/.test(phoneNumber); // 10 digits only
+
     return (
-      agree1 &&
-      agree2 &&
-      agree3 &&
-      agree4 &&
-      requesterName !== '' &&
-      facilitatorAffiliation !== '' &&
-      title !== '' &&
-      email !== '' &&
-      whyVideos !== '' &&
-      phoneNumber !== ''
+      allChecked &&
+      isRequesterNameValid &&
+      isFacilitatorAffiliationValid &&
+      isTitleValid &&
+      isEmailValid &&
+      isWhyVideosValid &&
+      isPhoneNumberValid
     );
   };
 
   return (
     <div className="user-agreement-page" style={{ padding: '30px', textAlign: 'left' }}>
-      <h1 style={{ paddingLeft: '20px'}}>
+      <h1 style={{ paddingLeft: '20px' }}>
         <b>User Agreement Form</b>
       </h1>
       <div className="agreement-checkboxes" style={{ padding: '20px' }}>
         <div style={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
-          <Checkbox label="I agree to only use these videos for purposes described above and not
-            copy or distribute them to other parties without permission of the
-            owning facilities." checked={agree1} onChange={handleAgree1Change} />
+        <Checkbox
+          label="I agree to only use these videos for purposes described below and not
+              copy or distribute them to other parties without permission of the
+              owning facilities."
+          checked={agree1}
+          onChange={(e) => setAgree1(e.target.checked)}
+        />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
-          <Checkbox label="I agree to maintain contact with the providing facilities according to
-            their expectations." checked={agree2} onChange={handleAgree2Change} />
+        <Checkbox
+          label="I agree to maintain contact with the providing facilities according to
+              their expectations."
+          checked={agree2}
+          onChange={(e) => setAgree2(e.target.checked)}
+        />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
-          <Checkbox label="I understand that many of these videos have not been pre-reviewed or
-            reviewed recently. If I see something concerning, which could include
-            graphic content such as animals harming themselves or one another or
-            appearing to be in distress, I agree to contact the providing
-            facility regarding further use of this video." checked={agree3} onChange={handleAgree3Change} />
+        <Checkbox
+          label="I understand that many of these videos have not been pre-reviewed or
+              reviewed recently. If I see something concerning, which could include
+              graphic content such as animals harming themselves or one another or
+              appearing to be in distress, I agree to contact the providing
+              facility regarding further use of this video."
+          checked={agree3}
+          onChange={(e) => setAgree3(e.target.checked)}
+        />
         </div>
         <div style={{ display: 'flex', alignItems: 'center', padding: '10px' }}>
-          <Checkbox label="If there are opportunities for the user to further enrich the
-            metadata of these videos to aid other potential users in deciding if
-            this video is of interest to them, I will provide details in the
-            database of any behaviors or observations that I feel are relevant
-            for this purpose." checked={agree4} onChange={handleAgree4Change} />
-
+        <Checkbox
+          label="If there are opportunities for the user to further enrich the
+              metadata of these videos to aid other potential users in deciding if
+              this video is of interest to them, I will provide details in the
+              database of any behaviors or observations that I feel are relevant
+              for this purpose."
+          checked={agree4}
+          onChange={(e) => setAgree4(e.target.checked)}
+        />        
         </div>
       </div>
       <div className="input-fields" style={{ padding: '20px' }}>
@@ -130,7 +125,7 @@ const UserAgreement = () => {
             <input
               type="text"
               value={requesterName}
-              onChange={handleRequesterNameChange}
+              onChange={(e) => setRequesterName(e.target.value)}
               style={{ width: '100%' }}
             />
           </div>
@@ -141,7 +136,7 @@ const UserAgreement = () => {
             <input
               type="text"
               value={facilitatorAffiliation}
-              onChange={handleFacilitatorAffiliationChange}
+              onChange={(e) => setFacilitatorAffiliation(e.target.value)}
               style={{ width: '100%' }}
             />
           </div>
@@ -152,7 +147,7 @@ const UserAgreement = () => {
             <input
               type="text"
               value={title}
-              onChange={handleTitleChange}
+              onChange={(e) => setTitle(e.target.value)}
               style={{ width: '100%' }}
             />
           </div>
@@ -163,7 +158,7 @@ const UserAgreement = () => {
             <input
               type="email"
               value={email}
-              onChange={handleEmailChange}
+              onChange={(e) => setEmail(e.target.value)}
               style={{ width: '100%' }}
             />
           </div>
@@ -171,11 +166,11 @@ const UserAgreement = () => {
         <div className="row" style={{ display: 'flex', justifyContent: 'space-between' }}>
           <div className="input-field" style={{ flex: '1', padding: '10px' }}>
             <label>
-              Why these videos? <span style={{ color: 'red' }}>*</span>
+              Why these videos? Explain the reasons <span style={{ color: 'red' }}>*</span>
             </label>
             <textarea
               value={whyVideos}
-              onChange={handleWhyVideosChange}
+              onChange={(e) => setWhyVideos(e.target.value)}
               rows={5}
               style={{ width: '100%' }}
             />
@@ -187,14 +182,15 @@ const UserAgreement = () => {
             <input
               type="tel"
               value={phoneNumber}
-              onChange={handlePhoneNumberChange}
+              onChange={(e) => setPhoneNumber(e.target.value)}
               style={{ width: '100%' }}
             />
           </div>
         </div>
       </div>
+
       <div className="buttons" style={{ textAlign: 'left', padding: '20px' }}>
-        <Button
+      <Button
           variant="contained"
           style={{
             backgroundColor: 'white',
@@ -208,7 +204,10 @@ const UserAgreement = () => {
         </Button>
         <Button
           variant="contained"
-          style={{ backgroundColor: '#FDBD57', color: 'black' }}
+          disabled={!isFormValid()}
+          style={{ backgroundColor: !isFormValid() ? '#EEECE5' : '#FDBD57',
+            color: 'black',
+            cursor: !isFormValid() ? 'not-allowed' : 'pointer',}}
           onClick={handleSubmit}
         >
           Submit request

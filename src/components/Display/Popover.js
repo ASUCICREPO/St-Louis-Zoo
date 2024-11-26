@@ -5,6 +5,12 @@ import ToggleButton from '../Buttons/ToggleButton';
 const Popover = ({ isOpen, onClose, videoData }) => {
   if (!isOpen || !videoData) return null;
 
+  const formatDuration = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    return `${hours > 0 ? `${hours}h ` : ''}${minutes}m`;
+  };
+
   const overlayStyle = {
     position: 'fixed',
     top: 0,
@@ -82,7 +88,7 @@ const Popover = ({ isOpen, onClose, videoData }) => {
           <div style={textContainerStyle}>
             {/* Text Details on the Left */}
             <h2 style={{ fontWeight: 'bold' }}>{videoData.title}</h2>
-            <p>Duration: {videoData.duration}</p>
+            <p>Duration: {formatDuration(videoData.duration)}</p>
             <p>Date: {videoData.date}</p>
           </div>
 
@@ -98,7 +104,7 @@ const Popover = ({ isOpen, onClose, videoData }) => {
         {/* Bottom Section */}
         <div>
           <ToggleButton />
-          <a href="#" onClick={() => alert('View Tag details clicked!')}>View Tag details</a>
+          {/* <a href="#" onClick={() => alert('View Tag details clicked!')}>View Tag details</a> */}
         </div>
       </div>
     </div>

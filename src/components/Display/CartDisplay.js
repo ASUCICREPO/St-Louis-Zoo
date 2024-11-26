@@ -1,12 +1,13 @@
 import React from 'react';
 import deleteIcon from "../../assets/icons/Delete.png";
 
-const CartDisplay = ({ videos, onRemove }) => {
+const CartDisplay = ({ videos = [], onRemove }) => {
   const containerStyle = {
     padding: '16px',
-    backgroundColor: '#f8f8f8',
+    backgroundColor: '#ffffff',
     borderRadius: '8px',
-    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+    width: '70%',
+    maxWidth: '800px',
   };
 
   const videoListContainerStyle = {
@@ -28,15 +29,15 @@ const CartDisplay = ({ videos, onRemove }) => {
   const videoTitleStyle = {
     fontSize: '16px',
     fontWeight: 'bold',
-    display: 'block', // Ensure it takes a full line
+    display: 'block',
   };
 
   const videoDurationStyle = {
-    display: 'block', // Ensure duration takes a full line
+    display: 'block',
   };
 
   const videoDateStyle = {
-    display: 'block', // Ensure date takes a full line
+    display: 'block',
   };
 
   const removeButtonStyle = {
@@ -59,32 +60,40 @@ const CartDisplay = ({ videos, onRemove }) => {
     margin: '8px 0',
   };
 
+  console.log('Videos stored:', videos);
+
   return (
     <div style={containerStyle}>
-      {/* Video list */}
       <div style={videoListContainerStyle}>
-        {videos.map((video, index) => (
-          <React.Fragment key={index}>
-            {/* Video Item */}
-            <div style={videoContainerStyle}>
-              <img src={video.thumbnail} alt="Thumbnail" style={{ width: '120px', height: '80px' }} />
-              <div style={videoInfoStyle}>
-                <span style={videoTitleStyle}>{video.title}</span>
-                <span style={videoDurationStyle}>Duration: {video.duration}</span>
-                <span style={videoDateStyle}>Date: {video.date}</span>
-                <div
-                  style={removeButtonStyle}
-                  onClick={() => onRemove(index)} // Use index to identify which video to remove
-                >
-                  Remove <img src={deleteIcon} alt="Delete Icon" style={deleteIconStyle} />
+        {Array.isArray(videos) && videos.length > 0 ? (
+          videos.map((video, index) => (
+            <React.Fragment key={index}>
+              <div style={videoContainerStyle}>
+                <img
+                  src={video.presigned_thumbnailstartpath}
+                  alt={video.commonname || "Thumbnail"}
+                  style={{ width: '120px', height: '80px' }}
+                />
+                <div style={videoInfoStyle}>
+                  <span style={videoTitleStyle}>{video.commonname || "Unknown Title"}</span>
+                  <span style={videoDurationStyle}>Duration: {video.duration || "Unknown Duration"}</span>
+                  <span style={videoDateStyle}>Date: {video.videodate || "Unknown Date"}</span>
+                  <div
+                    style={removeButtonStyle}
+                    onClick={() => onRemove(index)}
+                  >
+                    Remove <img src={deleteIcon} alt="Delete Icon" style={deleteIconStyle} />
+                  </div>
                 </div>
               </div>
-            </div>
-
-            {/* Divider */}
-            {index < videos.length - 1 && <div style={dividerStyle}></div>} {/* Only show divider if not last video */}
-          </React.Fragment>
-        ))}
+              {index < videos.length - 1 && <div style={dividerStyle}></div>}
+            </React.Fragment>
+          ))
+        ) : (
+          <div style={videoContainerStyle}>
+            <p>No videos in the cart.</p>
+          </div>
+        )}
       </div>
     </div>
   );

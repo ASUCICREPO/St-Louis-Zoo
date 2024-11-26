@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './SearchPage.css';
 import { styled } from '@mui/material/styles';
@@ -12,6 +12,7 @@ import Typography from '@mui/material/Typography';
 import VideoCard from '../components/Display/VideoCard';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { CartContext } from '../components/CartContext';
 
 
 const Accordion = styled((props) => (
@@ -138,6 +139,7 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const location = useLocation();
+  const { addVideoToCart } = useContext(CartContext);
 
 
   const navigate = useNavigate();
@@ -166,6 +168,10 @@ const SearchPage = () => {
     setExpanded(newExpanded ? panel : false);
   };
 
+  const handleAddToCart = (video) => {
+    addVideoToCart(video);
+  };
+
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setInputs(prevInputs => ({
@@ -188,11 +194,24 @@ const SearchPage = () => {
 
     try {
       // Replace with your actual API endpoint and parameters
-      const response = await axios.get('https://2g2799px6e.execute-api.us-east-1.amazonaws.com/default/GetSearchResults', {
+      const response = await axios.get('api', {
         params: {
           keyword: inputs.keyword,
-          duration: inputs.duration,
-          // Include other filters as needed
+        duration: inputs.duration,
+        videodate: inputs.videodate,  // Assuming videodate is an array with two values
+        commonname: inputs.commonname,
+        scientificname: inputs.scientificname,
+        groupsize: inputs.groupsize,
+        sexofanimals: inputs.sexofanimals,
+        ageofindividuals: inputs.ageofindividuals,
+        animalvisibility: inputs.animalvisibility,
+        videolocation: inputs.videolocation,
+        videocontext: inputs.videocontext,
+        videoformat: inputs.videoformat,
+        fileType: inputs.fileType,
+        datacollectionstatus: inputs.datacollectionstatus,
+        behavioraleffects: inputs.behavioraleffects,
+        starttime: inputs.starttime,
         }
       });
 
@@ -465,11 +484,14 @@ const SearchPage = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '20px' }}>
           {searchResults.map((result) => (
             <VideoCard 
+              video = {result}
               key={result.id}
-              title={result.title}
+              title={result.commonname}
               duration={result.duration}
-              date={result.date}
-              handleButtonClick={() => console.log(`Clicked video: ${result.title}`)} // Define your button click handler
+              date={result.videodate}
+              thumbnailUrl={result.presigned_thumbnailstartpath}
+              videoUrl={result.presigned_clippedvideopath}
+              handleButtonClick={() => addVideoToCart(result)} // Define your button click handler
             />
           ))}
         </div>
